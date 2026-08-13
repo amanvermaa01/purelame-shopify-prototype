@@ -1,7 +1,148 @@
 {% comment %}
+  ------------------------------------------------------------------------------
   Section: bundles-tier.liquid
-  Bundle Tiers Section (#bundles) for Purelane OS 2.0 Theme
+  Purelane Tiered Bundles Section (#bundles)
+  Features configurable tier cards, 'Highlight as Best Value' toggle (.best),
+  Shopify product picker, and dynamic textarea feature list generator.
+  ------------------------------------------------------------------------------
 {% endcomment %}
+
+<section 
+  class="sec section-bundles" 
+  id="bundles" 
+  data-scene="3"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="wrap">
+
+    {%- comment -%} SECTION HEADER BOX {%- endcomment -%}
+    <div class="glass sec-pad rv" style="margin-bottom:16px">
+      <div class="panel-head" style="margin-bottom:0">
+        {%- if section.settings.kicker != blank -%}
+          <span class="kicker">{{ section.settings.kicker | escape }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="d2" style="margin-top:12px">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.subheading != blank -%}
+          <p class="lede" style="margin:0 auto">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} BUNDLE TIERS GRID {%- endcomment -%}
+    <div class="tiers" aria-label="Bundle pricing tiers">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks limit: 3 -%}
+          {%- liquid
+            assign tier_product = block.settings.product
+            assign is_best_value = block.settings.is_featured
+            assign qty = block.settings.product_quantity | default: 2
+          -%}
+
+          <article 
+            class="glass tier{% if is_best_value %} best{% endif %} rv{% if forloop.index == 2 %} rv-d2{% elsif forloop.index == 3 %} rv-d3{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.tag_label != blank -%}
+              <span class="tag">{{ block.settings.tag_label | escape }}</span>
+            {%- endif -%}
+
+            {%- comment -%} Tier Visual Mini Product Stack Icons {%- endcomment -%}
+            <div class="tierpix{% if qty >= 5 %} five{% endif %}" aria-hidden="true">
+              {%- if qty == 2 -%}
+                <span class="pimg p-combo2" role="img"></span>
+              {%- elsif qty == 3 -%}
+                <span class="pimg p-kitchen" role="img"></span>
+                <span class="pimg p-tap" role="img"></span>
+                <span class="pimg p-dish" role="img"></span>
+              {%- else -%}
+                <span class="pimg p-kitchen" role="img"></span>
+                <span class="pimg p-tap" role="img"></span>
+                <span class="pimg p-floor" role="img"></span>
+                <span class="pimg p-toilet" role="img"></span>
+                <span class="pimg p-laundry" role="img"></span>
+              {%- endif -%}
+            </div>
+
+            {%- comment -%} Quantity & Pricing {%- endcomment -%}
+            <div class="qty">{{ qty }}<small>Products</small></div>
+
+            <div class="price">
+              {%- if tier_product != blank -%}
+                {{ tier_product.price | money }}
+                {%- if tier_product.compare_at_price > tier_product.price -%}
+                  <s>{{ tier_product.compare_at_price | money }}</s>
+                {%- endif -%}
+              {%- else -%}
+                {{ block.settings.price_override | default: '₹499' }}
+                {%- if block.settings.compare_price_override != blank -%}
+                  <s>{{ block.settings.compare_price_override | escape }}</s>
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.per_product_note != blank -%}
+              <p class="body-s" style="font-size:12px">{{ block.settings.per_product_note | escape }}</p>
+            {%- endif -%}
+
+            {%- comment -%} Dynamic Bullet Points (Generated from Textarea lines) {%- endcomment -%}
+            {%- if block.settings.features_list != blank -%}
+              {%- assign features = block.settings.features_list | newline_to_br | split: '<br />' -%}
+              <ul>
+                {%- for feature in features -%}
+                  {%- assign clean_feature = feature | strip -%}
+                  {%- if clean_feature != blank -%}
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="m5 13 4 4L19 7"/>
+                      </svg>
+                      {{ clean_feature | escape }}
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+            {%- comment -%} CTA Button {%- endcomment -%}
+            <a 
+              class="btn {% if is_best_value %}btn-primary{% else %}btn-ghost{% endif %}" 
+              href="{{ tier_product.url | default: block.settings.button_link | default: '#shop' }}"
+              aria-label="{{ block.settings.button_label | default: 'Build this box' }} for {{ qty }} products"
+            >
+              {{ block.settings.button_label | default: 'Build this box' }}
+              {%- if is_best_value -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h13m-5-6 6 6-6 6"/>
+                </svg>
+              {%- endif -%}
+            </a>
+          </article>
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Customizer Fallback Mock Tiers {%- endcomment -%}
+        <article class="glass tier best rv">
+          <span class="tag">Most popular</span>
+          <div class="tierpix" aria-hidden="true">
+            <span class="pimg p-kitchen"></span><span class="pimg p-tap"></span><span class="pimg p-dish"></span>
+          </div>
+          <div class="qty">3<small>Products</small></div>
+          <div class="price">₹499 <s>₹897</s></div>
+          <p class="body-s" style="font-size:12px">Flat ₹166 per product</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg>Pick any three products</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg>Covers kitchen and laundry</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg>Free shipping across India</li>
+          </ul>
+          <a class="btn btn-primary" href="#shop">Build this box</a>
+        </article>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
 
 {% schema %}
 {
@@ -56,48 +197,54 @@
     {
       "type": "tier_card",
       "name": "Bundle Tier Card",
+      "limit": 3,
       "settings": [
         {
-          "type": "text",
-          "id": "tag_label",
-          "label": "Tier Badge Tag",
-          "default": "Starter"
+          "type": "product",
+          "id": "product",
+          "label": "Select Bundle Product (Optional for dynamic pricing)"
         },
         {
           "type": "checkbox",
           "id": "is_featured",
-          "label": "Highlight as Most Popular / Featured",
+          "label": "Highlight as Best Value (Applies .best style & Primary CTA)",
           "default": false
+        },
+        {
+          "type": "text",
+          "id": "tag_label",
+          "label": "Tier Tag Badge",
+          "default": "Starter"
         },
         {
           "type": "number",
           "id": "product_quantity",
-          "label": "Product Quantity",
-          "default": 2
+          "label": "Product Quantity (2, 3, or 5)",
+          "default": 3
         },
         {
           "type": "text",
-          "id": "price",
-          "label": "Tier Price Display",
-          "default": "₹349"
+          "id": "price_override",
+          "label": "Price Display (Fallback)",
+          "default": "₹499"
         },
         {
           "type": "text",
-          "id": "compare_at_price",
-          "label": "Compare Price Display",
-          "default": "₹598"
+          "id": "compare_price_override",
+          "label": "Compare Price Display (Fallback)",
+          "default": "₹897"
         },
         {
           "type": "text",
           "id": "per_product_note",
-          "label": "Per Product Note",
-          "default": "Flat ₹174 per product"
+          "label": "Per Product Price Note",
+          "default": "Flat ₹166 per product"
         },
         {
           "type": "textarea",
           "id": "features_list",
-          "label": "Perks Bullet Points (One per line)",
-          "default": "Pick any two products\nFree shipping across India"
+          "label": "Features Bullet Points (One per line)",
+          "default": "Pick any three products\nCovers kitchen and laundry\nFree shipping across India"
         },
         {
           "type": "text",
@@ -123,8 +270,8 @@
             "tag_label": "Starter",
             "is_featured": false,
             "product_quantity": 2,
-            "price": "₹349",
-            "compare_at_price": "₹598",
+            "price_override": "₹349",
+            "compare_price_override": "₹598",
             "per_product_note": "Flat ₹174 per product",
             "features_list": "Pick any two products\nFree shipping across India"
           }
@@ -135,8 +282,8 @@
             "tag_label": "Most popular",
             "is_featured": true,
             "product_quantity": 3,
-            "price": "₹499",
-            "compare_at_price": "₹897",
+            "price_override": "₹499",
+            "compare_price_override": "₹897",
             "per_product_note": "Flat ₹166 per product",
             "features_list": "Pick any three products\nCovers kitchen and laundry\nFree shipping across India"
           }
@@ -147,8 +294,8 @@
             "tag_label": "Whole home",
             "is_featured": false,
             "product_quantity": 5,
-            "price": "₹799",
-            "compare_at_price": "₹1495",
+            "price_override": "₹799",
+            "compare_price_override": "₹1495",
             "per_product_note": "Flat ₹160 per product",
             "features_list": "Pick any five products\nEvery room in one order\nFree shipping across India"
           }
