@@ -1,0 +1,131 @@
+{% comment %}
+  Section: reviews-marquee.liquid
+  Reviews Rail Section (#reviews) for Purelane OS 2.0 Theme
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Reviews Rail (#reviews)",
+  "tag": "section",
+  "class": "section-reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker / Eyebrow",
+      "default": "That's what they said"
+    },
+    {
+      "type": "text",
+      "id": "aggregate_rating",
+      "label": "Aggregate Rating Text",
+      "default": "4.8 from 8,000+ reviews"
+    },
+    {
+      "type": "text",
+      "id": "aggregate_social_proof",
+      "label": "Social Proof Text",
+      "default": "Loved by 12 lakh+ homes"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Customer Review Card",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating_stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "label": "Star Rating"
+        },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Review Headline",
+          "default": "Works like a charm"
+        },
+        {
+          "type": "textarea",
+          "id": "body_text",
+          "label": "Review Content",
+          "default": "Finally an eco option that cleans as well as the chemical detergent I used for years, and it smells better."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author Name",
+          "default": "Anita"
+        },
+        {
+          "type": "text",
+          "id": "product_purchased",
+          "label": "Product Purchased / Tag",
+          "default": "Laundry detergent"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews Rail (#reviews)",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "headline": "Works like a charm",
+            "body_text": "Finally an eco option that cleans as well as the chemical detergent I used for years, and it smells better.",
+            "author": "Anita",
+            "product_purchased": "Laundry detergent"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "headline": "Best dishwash ever",
+            "body_text": "Our old dishwash left my help with dry, cracked skin. That stopped completely after we switched.",
+            "author": "Priya",
+            "product_purchased": "Dishwash gel"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "headline": "Great product, great packaging",
+            "body_text": "Very soft on hands with a lovely fragrance, and it feels good to be using far less plastic.",
+            "author": "Sunita",
+            "product_purchased": "Liquid handwash"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

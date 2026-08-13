@@ -1,0 +1,79 @@
+{% comment %}
+  Section: combos-carousel.liquid
+  Best Selling Combos Section (#combos) for Purelane OS 2.0 Theme
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Best Selling Combos",
+  "tag": "section",
+  "class": "section-combos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker / Eyebrow",
+      "default": "Pre-built to save you money"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best selling combos"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Swipe through the boxes people order most. Each one is already priced below buying the same products on their own."
+    },
+    {
+      "type": "product_list",
+      "id": "combo_products",
+      "label": "Combo Products List",
+      "limit": 8
+    },
+    {
+      "type": "text",
+      "id": "tax_note",
+      "label": "Footer Fine Print Note",
+      "default": "Inclusive of all taxes · COD available"
+    },
+    {
+      "type": "text",
+      "id": "rail_note",
+      "label": "Bottom Drawer Helper Note",
+      "default": "Tapping \"Shop bundle\" opens the bundle picker with these products already added. You can still swap anything before you pay."
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Best Selling Combos"
+    }
+  ]
+}
+{% endschema %}

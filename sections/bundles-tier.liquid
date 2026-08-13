@@ -1,0 +1,160 @@
+{% comment %}
+  Section: bundles-tier.liquid
+  Bundle Tiers Section (#bundles) for Purelane OS 2.0 Theme
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Bundle Tiers (#bundles)",
+  "tag": "section",
+  "class": "section-bundles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker / Eyebrow",
+      "default": "Build your bundle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "One box. Every room."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Mix and match across kitchen, laundry, home and skin. One flat price, no code needed, free shipping either way."
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tier_card",
+      "name": "Bundle Tier Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tag_label",
+          "label": "Tier Badge Tag",
+          "default": "Starter"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_featured",
+          "label": "Highlight as Most Popular / Featured",
+          "default": false
+        },
+        {
+          "type": "number",
+          "id": "product_quantity",
+          "label": "Product Quantity",
+          "default": 2
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Tier Price Display",
+          "default": "₹349"
+        },
+        {
+          "type": "text",
+          "id": "compare_at_price",
+          "label": "Compare Price Display",
+          "default": "₹598"
+        },
+        {
+          "type": "text",
+          "id": "per_product_note",
+          "label": "Per Product Note",
+          "default": "Flat ₹174 per product"
+        },
+        {
+          "type": "textarea",
+          "id": "features_list",
+          "label": "Perks Bullet Points (One per line)",
+          "default": "Pick any two products\nFree shipping across India"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Build this box"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle Tiers (#bundles)",
+      "blocks": [
+        {
+          "type": "tier_card",
+          "settings": {
+            "tag_label": "Starter",
+            "is_featured": false,
+            "product_quantity": 2,
+            "price": "₹349",
+            "compare_at_price": "₹598",
+            "per_product_note": "Flat ₹174 per product",
+            "features_list": "Pick any two products\nFree shipping across India"
+          }
+        },
+        {
+          "type": "tier_card",
+          "settings": {
+            "tag_label": "Most popular",
+            "is_featured": true,
+            "product_quantity": 3,
+            "price": "₹499",
+            "compare_at_price": "₹897",
+            "per_product_note": "Flat ₹166 per product",
+            "features_list": "Pick any three products\nCovers kitchen and laundry\nFree shipping across India"
+          }
+        },
+        {
+          "type": "tier_card",
+          "settings": {
+            "tag_label": "Whole home",
+            "is_featured": false,
+            "product_quantity": 5,
+            "price": "₹799",
+            "compare_at_price": "₹1495",
+            "per_product_note": "Flat ₹160 per product",
+            "features_list": "Pick any five products\nEvery room in one order\nFree shipping across India"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
