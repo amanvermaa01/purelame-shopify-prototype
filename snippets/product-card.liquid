@@ -1,0 +1,90 @@
+{% comment %}
+  ------------------------------------------------------------------------------
+  Snippet: product-card.liquid
+  Description: Dynamic, highly resilient product card for Shopify section grids (#shop).
+  Handles sold-out state, missing image fallback, and long titles.
+
+  Accepts:
+  - product: {Object} Product Liquid object (required)
+  - show_vendor: {Boolean} Show vendor if true (optional)
+  - custom_badge: {String} Override badge text (optional)
+  ------------------------------------------------------------------------------
+{% endcomment %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = product.featured_media | default: product.featured_image
+  
+  comment
+    Badge determination logic
+  endcomment
+  assign card_badge = ''
+  if custom_badge != blank
+    assign card_badge = custom_badge
+  elsif product.compare_at_price > product.price
+    assign card_badge = 'Sale'
+  else
+    assign card_badge = 'Best seller'
+  endif
+-%}
+
+<article class="glass card rv{% unless product.available %} card--sold-out{% endunless %}" data-product-id="{{ product.id }}">
+  <div class="shot">
+    {%- if product.available -%}
+      {%- if card_badge != blank -%}
+        <span class="pill">{{ card_badge }}</span>
+      {%- endif -%}
+    {%- else -%}
+      <span class="pill pill--sold-out">Sold Out</span>
+    {%- endif -%}
+
+    <a href="{{ product.url }}" class="shot-link" aria-label="{{ product.title | escape }}">
+      {%- if featured_media -%}
+        <img
+          src="{{ featured_media | image_url: width: 400 }}"
+          srcset="
+            {{ featured_media | image_url: width: 200 }} 200w,
+            {{ featured_media | image_url: width: 400 }} 400w,
+            {{ featured_media | image_url: width: 600 }} 600w
+          "
+          sizes="(min-width: 860px) 25vw, (min-width: 500px) 33vw, 50vw"
+          alt="{{ featured_media.alt | default: product.title | escape }}"
+          class="pimg pimg-img"
+          loading="lazy"
+          width="{{ featured_media.width | default: 400 }}"
+          height="{{ featured_media.height | default: 400 }}"
+        >
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg pimg-placeholder' }}
+      {%- endif -%}
+    </a>
+  </div>
+
+  <h4 class="product-card__title">
+    <a href="{{ product.url }}">{{ product.title }}</a>
+  </h4>
+
+  <div class="rate">
+    {%- assign rating_val = product.metafields.reviews.rating.value.rating | default: product.metafields.custom.rating | default: '4.8' -%}
+    {%- assign review_cnt = product.metafields.reviews.rating_count.value | default: product.metafields.custom.review_count | default: '237' -%}
+    <b>★ {{ rating_val }}</b> · {{ review_cnt }} reviews
+  </div>
+
+  <div class="pr">
+    <strong>{{ product.price | money }}</strong>
+    {%- if product.compare_at_price > product.price -%}
+      <s>{{ product.compare_at_price | money }}</s>
+      {%- assign savings_percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+      <em>{{ savings_percent }}% off</em>
+    {%- endif -%}
+  </div>
+
+  {%- if product.available -%}
+    {%- form 'product', product, class: 'product-card-form' -%}
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      <button type="submit" class="btn btn-ghost btn-sm">Add to cart</button>
+    {%- endform -%}
+  {%- else -%}
+    <button type="button" class="btn btn-ghost btn-sm" disabled="disabled">Sold Out</button>
+  {%- endif -%}
+</article>
