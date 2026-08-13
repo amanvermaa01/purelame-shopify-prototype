@@ -1,7 +1,260 @@
 {% comment %}
+  ------------------------------------------------------------------------------
   Section: hero.liquid
-  Hero Section for Purelane OS 2.0 Theme
+  Purelane Production-Ready Hero Section (OS 2.0 / Dawn architecture)
+  Includes interactive product showcase slider, dynamic price variance calculation,
+  badge rails, and full accessibility (a11y) optimizations.
+  ------------------------------------------------------------------------------
 {% endcomment %}
+
+<section 
+  class="hero" 
+  data-scene="1" 
+  id="hero-{{ section.id }}"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+  aria-label="{{ section.settings.accessibility_label | default: 'Hero Section' }}"
+>
+  <div class="hero-grid">
+
+    {%- comment -%} DESKTOP PROMISE BADGES RAIL {%- endcomment -%}
+    {%- assign promise_blocks = section.blocks | where: 'type', 'promise_badge' -%}
+    {%- if promise_blocks.size > 0 -%}
+      <aside class="badges glass-2" aria-label="Product promises">
+        {%- for block in promise_blocks limit: 3 -%}
+          <div class="badge" {{ block.shopify_attributes }}>
+            <span class="bi" aria-hidden="true">
+              {%- if block.settings.icon_svg != blank -%}
+                {{ block.settings.icon_svg }}
+              {%- elsif forloop.index == 1 -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+              {%- elsif forloop.index == 2 -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v6.2c0 4.3 3.1 7.6 7.5 8.8 4.4-1.2 7.5-4.5 7.5-8.8V6L12 3Z"/><path d="m9 12 2.2 2.2L15.4 10"/></svg>
+              {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M6.4 17.6 17.6 6.4"/></svg>
+              {%- endif -%}
+            </span>
+            <span>{{ block.settings.title | escape | newline_to_br }}</span>
+          </div>
+        {%- endfor -%}
+      </aside>
+    {%- endif -%}
+
+    {%- comment -%} HERO COPY CONTENT {%- endcomment -%}
+    <div class="hero-copy">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="d1 rv in">
+          {{ section.settings.heading }}
+        </h1>
+      {%- endif -%}
+
+      <div class="rule rv rv-d1" aria-hidden="true">
+        <i></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/>
+          <path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/>
+        </svg>
+        <i></i>
+      </div>
+
+      {%- if section.settings.subheading != blank -%}
+        <div class="lede rv rv-d2">
+          {{ section.settings.subheading }}
+        </div>
+      {%- endif -%}
+
+      <div class="hero-cta rv rv-d3">
+        {%- if section.settings.button_primary_label != blank -%}
+          <a class="btn btn-primary" href="{{ section.settings.button_primary_link | default: '#shop' }}">
+            {{ section.settings.button_primary_label | escape }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h13m-5-6 6 6-6 6"/>
+            </svg>
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.button_ghost_label != blank -%}
+          <a class="btn btn-ghost" href="{{ section.settings.button_ghost_link | default: '#how' }}">
+            {{ section.settings.button_ghost_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} MOBILE BADGE STRIP {%- endcomment -%}
+      {%- if promise_blocks.size > 0 -%}
+        <div class="badgestrip rv rv-d4" aria-label="Product promise highlights">
+          {%- for block in promise_blocks limit: 3 -%}
+            <div class="glass-2">
+              {%- if block.settings.icon_svg != blank -%}
+                {{ block.settings.icon_svg }}
+              {%- elsif forloop.index == 1 -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+              {%- elsif forloop.index == 2 -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v6.2c0 4.3 3.1 7.6 7.5 8.8 4.4-1.2 7.5-4.5 7.5-8.8V6L12 3Z"/><path d="m9 12 2.2 2.2L15.4 10"/></svg>
+              {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><path d="M6.4 17.6 17.6 6.4"/></svg>
+              {%- endif -%}
+              {{ block.settings.title | escape }}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} INTERACTIVE PRODUCT STAGE {%- endcomment -%}
+    {%- assign slide_blocks = section.blocks | where: 'type', 'product_slide' -%}
+    {%- if slide_blocks.size > 0 -%}
+      <div class="hero-prod" id="heroProd-{{ section.id }}">
+        <div class="hstage" id="hstage-{{ section.id }}">
+          {%- for block in slide_blocks limit: 3 -%}
+            {%- liquid
+              assign slide_products = block.settings.products
+              assign total_price = 0
+              assign total_compare_price = 0
+              assign product_count = 0
+            -%}
+
+            {%- if slide_products.count > 0 -%}
+              {%- for prod in slide_products -%}
+                {%- assign product_count = product_count | plus: 1 -%}
+                {%- assign total_price = total_price | plus: prod.price -%}
+                {%- assign prod_compare = prod.compare_at_price | default: prod.price -%}
+                {%- assign total_compare_price = total_compare_price | plus: prod_compare -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- comment -%} Fallback mock price calculation if products aren't set yet {%- endcomment -%}
+              {%- assign product_count = forloop.index -%}
+              {%- if forloop.index == 1 -%}
+                {%- assign total_price = 20000 -%}
+                {%- assign total_compare_price = 29900 -%}
+              {%- elsif forloop.index == 2 -%}
+                {%- assign total_price = 34900 -%}
+                {%- assign total_compare_price = 59800 -%}
+              {%- else -%}
+                {%- assign total_price = 49900 -%}
+                {%- assign total_compare_price = 89700 -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- assign savings_amount = total_compare_price | minus: total_price -%}
+
+            <div 
+              class="hslide hs{{ forloop.index }}{% if forloop.first %} on{% endif %}" 
+              data-n="{{ forloop.index }}"
+              id="hslide-{{ section.id }}-{{ forloop.index }}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if slide_products.count > 0 -%}
+                {%- for prod in slide_products limit: 3 -%}
+                  {%- liquid
+                    assign delay_class = 'd1'
+                    assign pos_class = 'a'
+                    if forloop.index == 2
+                      assign pos_class = 'b'
+                      assign delay_class = 'd2'
+                    elsif forloop.index == 3
+                      assign pos_class = 'c'
+                      assign delay_class = 'd3'
+                    endif
+                  -%}
+
+                  {%- if prod.featured_media -%}
+                    <img
+                      src="{{ prod.featured_media | image_url: width: 600 }}"
+                      alt="{{ prod.featured_media.alt | default: prod.title | escape }}"
+                      class="hp {{ pos_class }} {{ delay_class }}"
+                      loading="lazy"
+                      width="{{ prod.featured_media.width | default: 380 }}"
+                      height="{{ prod.featured_media.height | default: 500 }}"
+                    >
+                  {%- else -%}
+                    <div class="hp {{ pos_class }} {{ delay_class }} hp-fallback">
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- else -%}
+                {%- comment -%} Prototype Fallback SVG Bottle Art {%- endcomment -%}
+                <span class="hp p-kbtl a d1" role="img" aria-label="Purelane bottle showcase"></span>
+                {%- if forloop.index >= 2 -%}
+                  <span class="hp p-tbtl b d2" role="img" aria-label="Purelane second bottle showcase"></span>
+                {%- endif -%}
+                {%- if forloop.index == 3 -%}
+                  <span class="hp p-mbtl c d3" role="img" aria-label="Purelane third bottle showcase"></span>
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- comment -%} DYNAMIC PRICE TAG {%- endcomment -%}
+              <div class="glass-2 ptag" aria-label="{{ block.settings.label | escape }}: {{ total_price | money }}">
+                <span class="lbl">{{ block.settings.label | escape }}</span>
+                <span class="val">
+                  <strong>{{ total_price | money }}</strong>
+                  {%- if total_compare_price > total_price -%}
+                    <s>{{ total_compare_price | money }}</s>
+                  {%- endif -%}
+                </span>
+
+                <span class="cut">
+                  {%- if block.settings.custom_cut_text != blank -%}
+                    {{ block.settings.custom_cut_text | escape }}
+                  {%- elsif total_compare_price > total_price -%}
+                    {%- if product_count == 1 -%}
+                      {%- assign discount_pct = savings_amount | times: 100.0 | divided_by: total_compare_price | round -%}
+                      {{ discount_pct }}% off
+                    {%- else -%}
+                      Save {{ savings_amount | money }}
+                    {%- endif -%}
+                  {%- else -%}
+                    Best Value
+                  {%- endif -%}
+                </span>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- comment -%} SLIDE CONTROLLER DOTS {%- endcomment -%}
+        <div class="hdots" id="hdots-{{ section.id }}" role="tablist" aria-label="Product stage slide controls">
+          {%- for block in slide_blocks limit: 3 -%}
+            <button 
+              type="button" 
+              class="{% if forloop.first %}on{% endif %}" 
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="hslide-{{ section.id }}-{{ forloop.index }}"
+              aria-label="Show slide {{ forloop.index }}: {{ block.settings.label | escape }}"
+              data-slide-index="{{ forloop.index0 }}"
+            ></button>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{%- comment -%} INTERACTIVE HERO SLIDER SCRIPT {%- endcomment -%}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const heroProd = document.getElementById('heroProd-{{ section.id }}');
+    if (!heroProd) return;
+    const slides = heroProd.querySelectorAll('.hslide');
+    const dots = heroProd.querySelectorAll('.hdots button');
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', function() {
+        slides.forEach(s => s.classList.remove('on'));
+        dots.forEach(d => {
+          d.classList.remove('on');
+          d.setAttribute('aria-selected', 'false');
+        });
+
+        if (slides[index]) slides[index].classList.add('on');
+        dot.classList.add('on');
+        dot.setAttribute('aria-selected', 'true');
+      });
+    });
+  });
+</script>
 
 {% schema %}
 {
@@ -11,21 +264,25 @@
   "settings": [
     {
       "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Clean That Lasts"
+      "id": "accessibility_label",
+      "label": "Accessibility Label",
+      "default": "Hero Section"
     },
     {
-      "type": "text",
-      "id": "highlighted_word",
-      "label": "Highlighted Word (Lime Color)",
-      "default": "Lasts"
+      "type": "html",
+      "id": "heading",
+      "label": "Heading (HTML Supported)",
+      "default": "Clean<br>That<br><span class=\"lime\">Lasts</span>"
     },
     {
       "type": "richtext",
       "id": "subheading",
-      "label": "Subheading",
+      "label": "Subheading Paragraph",
       "default": "<p>Homecare that works on the toughest grime, made from plants. Kind to your home, your family and the world outside it.</p>"
+    },
+    {
+      "type": "header",
+      "content": "CTA Buttons"
     },
     {
       "type": "text",
@@ -40,14 +297,14 @@
     },
     {
       "type": "text",
-      "id": "button_secondary_label",
-      "label": "Secondary Button Label",
+      "id": "button_ghost_label",
+      "label": "Ghost Button Label",
       "default": "How it works"
     },
     {
       "type": "url",
-      "id": "button_secondary_link",
-      "label": "Secondary Button Link"
+      "id": "button_ghost_link",
+      "label": "Ghost Button Link"
     },
     {
       "type": "header",
@@ -57,27 +314,28 @@
       "type": "range",
       "id": "padding_top",
       "min": 0,
-      "max": 100,
-      "step": 4,
+      "max": 150,
+      "step": 5,
       "unit": "px",
       "label": "Padding Top",
-      "default": 36
+      "default": 150
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "min": 0,
-      "max": 100,
-      "step": 4,
+      "max": 150,
+      "step": 5,
       "unit": "px",
       "label": "Padding Bottom",
-      "default": 36
+      "default": 35
     }
   ],
   "blocks": [
     {
       "type": "promise_badge",
       "name": "Promise Badge",
+      "limit": 3,
       "settings": [
         {
           "type": "text",
@@ -91,15 +349,61 @@
           "label": "Custom SVG Icon Code"
         }
       ]
+    },
+    {
+      "type": "product_slide",
+      "name": "Product Showcase Slide",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Slide Tagline Label",
+          "default": "Single bottle"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Products for this slide",
+          "limit": 3
+        },
+        {
+          "type": "text",
+          "id": "custom_cut_text",
+          "label": "Custom Discount / Savings Override (Optional)",
+          "info": "Leave blank to auto-calculate '33% off' or 'Save ₹249'"
+        }
+      ]
     }
   ],
   "presets": [
     {
       "name": "Hero Banner",
       "blocks": [
-        { "type": "promise_badge", "settings": { "title": "Plant powered" } },
-        { "type": "promise_badge", "settings": { "title": "Safe for kids & pets" } },
-        { "type": "promise_badge", "settings": { "title": "Zero harsh chemicals" } }
+        {
+          "type": "promise_badge",
+          "settings": { "title": "Plant powered" }
+        },
+        {
+          "type": "promise_badge",
+          "settings": { "title": "Safe for kids & pets" }
+        },
+        {
+          "type": "promise_badge",
+          "settings": { "title": "Zero harsh chemicals" }
+        },
+        {
+          "type": "product_slide",
+          "settings": { "label": "Single bottle" }
+        },
+        {
+          "type": "product_slide",
+          "settings": { "label": "Any 2 products" }
+        },
+        {
+          "type": "product_slide",
+          "settings": { "label": "Any 3 products" }
+        }
       ]
     }
   ]
