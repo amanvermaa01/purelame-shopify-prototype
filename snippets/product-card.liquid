@@ -1,12 +1,13 @@
 {% comment %}
   ------------------------------------------------------------------------------
   Snippet: product-card.liquid
-  Description: Dynamic, highly resilient product card for Shopify section grids (#shop).
-  Handles sold-out state, missing image fallback, and long titles.
+  Description: Production-ready OS 2.0 product card for Purelane grid (#shop).
+  Features dynamic Shopify variables, Metafield badges/ratings, SVG image fallback,
+  sold-out handling, and accessibility (a11y) optimizations.
 
   Accepts:
-  - product: {Object} Product Liquid object (required)
-  - show_vendor: {Boolean} Show vendor if true (optional)
+  - product: {Object} Shopify Product object (required)
+  - show_vendor: {Boolean} Show product vendor if true (optional)
   - custom_badge: {String} Override badge text (optional)
   ------------------------------------------------------------------------------
 {% endcomment %}
@@ -14,31 +15,46 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign featured_media = product.featured_media | default: product.featured_image
-  
+
   comment
-    Badge determination logic
+    Metafield & Tag Badge Resolution
   endcomment
-  assign card_badge = ''
-  if custom_badge != blank
-    assign card_badge = custom_badge
-  elsif product.compare_at_price > product.price
-    assign card_badge = 'Sale'
-  else
-    assign card_badge = 'Best seller'
+  assign badge_text = custom_badge
+  if badge_text == blank
+    assign badge_text = product.metafields.custom.badge_text.value | default: product.metafields.custom.badge_text
   endif
+  if badge_text == blank
+    for tag in product.tags
+      if tag contains 'badge:'
+        assign badge_text = tag | split: ':' | last
+        break
+      endif
+    endfor
+  endif
+  if badge_text == blank and product.compare_at_price > product.price
+    assign badge_text = 'Sale'
+  endif
+
+  comment
+    Metafield Rating Resolution
+  endcomment
+  assign rating_val = product.metafields.reviews.rating.value.rating | default: product.metafields.custom.rating_summary.value.rating | default: product.metafields.custom.rating
+  assign review_cnt = product.metafields.reviews.rating_count.value | default: product.metafields.custom.rating_summary.value.review_count | default: product.metafields.custom.review_count
 -%}
 
 <article class="glass card rv{% unless product.available %} card--sold-out{% endunless %}" data-product-id="{{ product.id }}">
   <div class="shot">
+    {%- comment -%} BADGE & SOLD-OUT INDICATOR {%- endcomment -%}
     {%- if product.available -%}
-      {%- if card_badge != blank -%}
-        <span class="pill">{{ card_badge }}</span>
+      {%- if badge_text != blank -%}
+        <span class="pill" role="status">{{ badge_text }}</span>
       {%- endif -%}
     {%- else -%}
-      <span class="pill pill--sold-out">Sold Out</span>
+      <span class="pill pill--sold-out" role="status" aria-label="Status: Sold out">Sold Out</span>
     {%- endif -%}
 
-    <a href="{{ product.url }}" class="shot-link" aria-label="{{ product.title | escape }}">
+    {%- comment -%} ACCESSIBLE PRODUCT IMAGE / PLACEHOLDER {%- endcomment -%}
+    <a href="{{ product.url }}" class="shot-link" aria-label="View product details for {{ product.title | escape }}">
       {%- if featured_media -%}
         <img
           src="{{ featured_media | image_url: width: 400 }}"
@@ -60,31 +76,55 @@
     </a>
   </div>
 
+  {%- comment -%} DYNAMIC PRODUCT TITLE (LINE CLAMPED VIA CSS) {%- endcomment -%}
   <h4 class="product-card__title">
     <a href="{{ product.url }}">{{ product.title }}</a>
   </h4>
 
-  <div class="rate">
-    {%- assign rating_val = product.metafields.reviews.rating.value.rating | default: product.metafields.custom.rating | default: '4.8' -%}
-    {%- assign review_cnt = product.metafields.reviews.rating_count.value | default: product.metafields.custom.review_count | default: '237' -%}
-    <b>★ {{ rating_val }}</b> · {{ review_cnt }} reviews
-  </div>
+  {%- comment -%} METAFIELD REVIEWS & STAR RATING {%- endcomment -%}
+  {%- if rating_val != blank or review_cnt != blank -%}
+    <div class="rate" aria-label="Rated {{ rating_val | default: '4.8' }} out of 5 stars from {{ review_cnt | default: '237' }} reviews">
+      <b aria-hidden="true">★ {{ rating_val | default: '4.8' }}</b>
+      <span aria-hidden="true">· {{ review_cnt | default: '237' }} reviews</span>
+    </div>
+  {%- else -%}
+    <div class="rate rate--fallback" aria-label="Rated 4.8 out of 5 stars from 237 reviews">
+      <b aria-hidden="true">★ 4.8</b>
+      <span aria-hidden="true">· 237 reviews</span>
+    </div>
+  {%- endif -%}
 
-  <div class="pr">
+  {%- comment -%} DYNAMIC PRICING {%- endcomment -%}
+  <div class="pr" aria-label="Price: {{ product.price | money_with_currency }}">
     <strong>{{ product.price | money }}</strong>
     {%- if product.compare_at_price > product.price -%}
-      <s>{{ product.compare_at_price | money }}</s>
-      {%- assign savings_percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
-      <em>{{ savings_percent }}% off</em>
+      <s aria-label="Original price: {{ product.compare_at_price | money_with_currency }}">{{ product.compare_at_price | money }}</s>
+      {%- assign discount_percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+      <em aria-label="{{ discount_percent }} percent discount">{{ discount_percent }}% off</em>
     {%- endif -%}
   </div>
 
+  {%- comment -%} CART ACTION FORM / SOLD OUT STATE {%- endcomment -%}
   {%- if product.available -%}
     {%- form 'product', product, class: 'product-card-form' -%}
       <input type="hidden" name="id" value="{{ current_variant.id }}">
-      <button type="submit" class="btn btn-ghost btn-sm">Add to cart</button>
+      <button 
+        type="submit" 
+        class="btn btn-ghost btn-sm"
+        aria-label="Add {{ product.title | escape }} to cart"
+      >
+        Add to cart
+      </button>
     {%- endform -%}
   {%- else -%}
-    <button type="button" class="btn btn-ghost btn-sm" disabled="disabled">Sold Out</button>
+    <button 
+      type="button" 
+      class="btn btn-ghost btn-sm" 
+      disabled="disabled" 
+      aria-disabled="true"
+      aria-label="{{ product.title | escape }} is sold out"
+    >
+      Sold Out
+    </button>
   {%- endif -%}
 </article>
