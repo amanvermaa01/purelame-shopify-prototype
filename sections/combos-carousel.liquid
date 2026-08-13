@@ -1,7 +1,216 @@
 {% comment %}
+  ------------------------------------------------------------------------------
   Section: combos-carousel.liquid
-  Best Selling Combos Section (#combos) for Purelane OS 2.0 Theme
+  Purelane Best-Selling Combos Slider (#combos)
+  ------------------------------------------------------------------------------
+  Metafield Schema Reference (Optional):
+  - namespace: 'custom'
+  - key: 'combo_item_highlights' (json type: list of mini items & text)
+  - key: 'combo_tagline' (single_line_text_field: e.g., 'You save ₹398')
+  ------------------------------------------------------------------------------
 {% endcomment %}
+
+<section 
+  class="sec section-combos" 
+  id="combos" 
+  data-scene="3"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="wrap">
+
+    {%- comment -%} SECTION HEADER {%- endcomment -%}
+    <div class="panel-head rv">
+      {%- if section.settings.kicker != blank -%}
+        <span class="kicker">{{ section.settings.kicker | escape }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="d2" style="margin-top:12px">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      <div class="rule" aria-hidden="true">
+        <i></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/>
+          <path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/>
+        </svg>
+        <i></i>
+      </div>
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="lede" style="margin:14px auto 0">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} COMBOS SCROLL RAIL {%- endcomment -%}
+    <div class="comborail rv" aria-label="Best selling combos list">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign combo_product = block.settings.product
+            assign compare_price = combo_product.compare_at_price_max | default: combo_product.compare_at_price
+            assign savings_amount = 0
+            if compare_price > combo_product.price
+              assign savings_amount = compare_price | minus: combo_product.price
+            endif
+          -%}
+
+          <article 
+            class="glass combo{% if block.settings.is_featured %} hero-combo{% endif %}" 
+            {{ block.shopify_attributes }}
+          >
+            <div class="tray">
+              {%- comment -%} Dynamic Savings Calculation Tag {%- endcomment -%}
+              {%- if block.settings.custom_save_tag != blank -%}
+                <span class="save">{{ block.settings.custom_save_tag | escape }}</span>
+              {%- elsif savings_amount > 0 -%}
+                <span class="save">You save {{ savings_amount | money }}</span>
+              {%- endif -%}
+
+              {%- if block.settings.flag_tag != blank -%}
+                <span class="flag">{{ block.settings.flag_tag | escape }}</span>
+              {%- endif -%}
+
+              {%- comment -%} Stacked Mini Items Showcase {%- endcomment -%}
+              <div class="stack">
+                {%- if block.settings.item1_label != blank -%}
+                  <span class="it">
+                    {%- if block.settings.item1_image != blank -%}
+                      <img 
+                        src="{{ block.settings.item1_image | image_url: width: 120 }}" 
+                        alt="{{ block.settings.item1_label | escape }}"
+                        class="pimg-img"
+                        loading="lazy"
+                        width="60"
+                        height="60"
+                      >
+                    {%- else -%}
+                      <span class="pimg p-kitchen" role="img" aria-label="{{ block.settings.item1_label | escape }}"></span>
+                    {%- endif -%}
+                    <span>{{ block.settings.item1_label | escape }}</span>
+                  </span>
+                {%- endif -%}
+
+                {%- if block.settings.item2_label != blank -%}
+                  <span class="plus" aria-hidden="true">+</span>
+                  <span class="it">
+                    {%- if block.settings.item2_image != blank -%}
+                      <img 
+                        src="{{ block.settings.item2_image | image_url: width: 120 }}" 
+                        alt="{{ block.settings.item2_label | escape }}"
+                        class="pimg-img"
+                        loading="lazy"
+                        width="60"
+                        height="60"
+                      >
+                    {%- else -%}
+                      <span class="pimg p-dish" role="img" aria-label="{{ block.settings.item2_label | escape }}"></span>
+                    {%- endif -%}
+                    <span>{{ block.settings.item2_label | escape }}</span>
+                  </span>
+                {%- endif -%}
+
+                {%- if block.settings.item3_label != blank -%}
+                  <span class="plus" aria-hidden="true">+</span>
+                  <span class="it">
+                    {%- if block.settings.item3_image != blank -%}
+                      <img 
+                        src="{{ block.settings.item3_image | image_url: width: 120 }}" 
+                        alt="{{ block.settings.item3_label | escape }}"
+                        class="pimg-img"
+                        loading="lazy"
+                        width="60"
+                        height="60"
+                      >
+                    {%- else -%}
+                      <span class="pimg p-tap" role="img" aria-label="{{ block.settings.item3_label | escape }}"></span>
+                    {%- endif -%}
+                    <span>{{ block.settings.item3_label | escape }}</span>
+                  </span>
+                {%- endif -%}
+              </div>
+            </div>
+
+            <div class="body">
+              <h3>
+                {%- if combo_product != blank -%}
+                  <a href="{{ combo_product.url }}">{{ combo_product.title }}</a>
+                {%- else -%}
+                  {{ block.settings.title_override | default: 'Kitchen essentials' }}
+                {%- endif -%}
+              </h3>
+
+              <div class="cnt">{{ block.settings.product_count_text | default: '3 products' }}</div>
+
+              <p class="inc">
+                {%- if block.settings.description != blank -%}
+                  {{ block.settings.description | escape }}
+                {%- elsif combo_product != blank -%}
+                  {{ combo_product.description | strip_html | truncate: 140 }}
+                {%- else -%}
+                  Includes: Foaming Kitchen Cleaner, Dishwash Gel & Tap Cleaner. Everything for a sparkling kitchen.
+                {%- endif -%}
+              </p>
+
+              <div class="prow">
+                <strong>{{ combo_product.price | default: 49900 | money }}</strong>
+                {%- if compare_price > combo_product.price -%}
+                  <s>{{ compare_price | money }}</s>
+                  {%- if savings_amount > 0 -%}
+                    <em>Save {{ savings_amount | money }}</em>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+
+              <div class="fine">{{ section.settings.fine_print_text | default: 'Inclusive of all taxes · COD available' }}</div>
+
+              <a 
+                class="btn {% if block.settings.is_featured %}btn-primary{% else %}btn-ghost{% endif %}" 
+                href="{{ combo_product.url | default: '#bundles' }}"
+                aria-label="{{ block.settings.button_label | default: 'Shop bundle' }} for {{ combo_product.title | default: 'this combo' | escape }}"
+              >
+                {{ block.settings.button_label | default: 'Shop bundle' }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>
+              </a>
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Theme Customizer Onboarding Combo Cards {%- endcomment -%}
+        <article class="glass combo hero-combo">
+          <div class="tray">
+            <span class="save">You save ₹398</span>
+            <span class="flag">Most popular</span>
+            <div class="stack">
+              <span class="it"><span class="pimg p-kitchen"></span><span>Cuts grease</span></span>
+              <span class="plus">+</span>
+              <span class="it"><span class="pimg p-dish"></span><span>Clean dishes</span></span>
+              <span class="plus">+</span>
+              <span class="it"><span class="pimg p-tap"></span><span>Tap cleaner</span></span>
+            </div>
+          </div>
+          <div class="body">
+            <h3>Kitchen essentials combo</h3>
+            <div class="cnt">3 products</div>
+            <p class="inc">Includes: Kitchen Cleaner, Dishwash Gel & Tap Cleaner. Add your combo products via Theme Customizer.</p>
+            <div class="prow"><strong>₹499</strong><s>₹897</s><em>Save ₹398</em></div>
+            <div class="fine">Inclusive of all taxes · COD available</div>
+            <a class="btn btn-primary" href="#">Shop bundle</a>
+          </div>
+        </article>
+      {%- endif -%}
+    </div>
+
+    <div class="swipecue" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>
+      Swipe for more combos
+    </div>
+
+    {%- if section.settings.rail_note != blank -%}
+      <p class="railnote">{{ section.settings.rail_note | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
 
 {% schema %}
 {
@@ -28,21 +237,15 @@
       "default": "Swipe through the boxes people order most. Each one is already priced below buying the same products on their own."
     },
     {
-      "type": "product_list",
-      "id": "combo_products",
-      "label": "Combo Products List",
-      "limit": 8
-    },
-    {
       "type": "text",
-      "id": "tax_note",
-      "label": "Footer Fine Print Note",
+      "id": "fine_print_text",
+      "label": "Fine Print Note",
       "default": "Inclusive of all taxes · COD available"
     },
     {
       "type": "text",
       "id": "rail_note",
-      "label": "Bottom Drawer Helper Note",
+      "label": "Bottom Helper Note",
       "default": "Tapping \"Shop bundle\" opens the bundle picker with these products already added. You can still swap anything before you pay."
     },
     {
@@ -70,9 +273,135 @@
       "default": 48
     }
   ],
+  "blocks": [
+    {
+      "type": "combo_card",
+      "name": "Combo Box Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Combo Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_featured",
+          "label": "Highlight as Featured / Best Value (Primary Button Glow)",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "custom_save_tag",
+          "label": "Custom Save Banner (Optional)",
+          "info": "Leave blank to auto-calculate 'You save ₹X'"
+        },
+        {
+          "type": "text",
+          "id": "flag_tag",
+          "label": "Flag Tag (e.g. 'Most popular', 'Best value')",
+          "default": "Most popular"
+        },
+        {
+          "type": "text",
+          "id": "title_override",
+          "label": "Title Override (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "product_count_text",
+          "label": "Product Count Subtitle",
+          "default": "3 products"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Included Items Text Description"
+        },
+        {
+          "type": "header",
+          "content": "Item 1 Highlight"
+        },
+        {
+          "type": "image_picker",
+          "id": "item1_image",
+          "label": "Item 1 Mini Image"
+        },
+        {
+          "type": "text",
+          "id": "item1_label",
+          "label": "Item 1 Text Label",
+          "default": "Cuts grease instantly"
+        },
+        {
+          "type": "header",
+          "content": "Item 2 Highlight"
+        },
+        {
+          "type": "image_picker",
+          "id": "item2_image",
+          "label": "Item 2 Mini Image"
+        },
+        {
+          "type": "text",
+          "id": "item2_label",
+          "label": "Item 2 Text Label",
+          "default": "Squeaky clean dishes"
+        },
+        {
+          "type": "header",
+          "content": "Item 3 Highlight"
+        },
+        {
+          "type": "image_picker",
+          "id": "item3_image",
+          "label": "Item 3 Mini Image"
+        },
+        {
+          "type": "text",
+          "id": "item3_label",
+          "label": "Item 3 Text Label",
+          "default": "Melts hard water stains"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Shop bundle"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Best Selling Combos"
+      "name": "Best Selling Combos",
+      "blocks": [
+        {
+          "type": "combo_card",
+          "settings": {
+            "title_override": "Kitchen essentials",
+            "flag_tag": "Most popular",
+            "is_featured": false,
+            "product_count_text": "3 products",
+            "description": "Includes: Foaming Kitchen Cleaner, Dishwash Gel & Tap Cleaner.",
+            "item1_label": "Cuts grease instantly",
+            "item2_label": "Squeaky clean dishes",
+            "item3_label": "Melts hard water stains"
+          }
+        },
+        {
+          "type": "combo_card",
+          "settings": {
+            "title_override": "Complete home bundle",
+            "flag_tag": "Best value",
+            "is_featured": true,
+            "product_count_text": "5 products",
+            "description": "Includes: Kitchen Cleaner, Laundry Detergent, Floor Cleaner, Toilet Cleaner & Handwash.",
+            "item1_label": "Cuts grease instantly",
+            "item2_label": "Kills 99.9% germs",
+            "item3_label": "Gentle hydration"
+          }
+        }
+      ]
     }
   ]
 }
