@@ -1,7 +1,112 @@
 {% comment %}
+  ------------------------------------------------------------------------------
   Section: reviews-marquee.liquid
-  Reviews Rail Section (#reviews) for Purelane OS 2.0 Theme
+  Purelane Scrolling Customer Reviews Marquee (#reviews)
+  Includes merchant-editable aggregate stats, customizable review cards with
+  1-5 star sliders, and WCAG accessibility pause-on-hover/focus controls.
+  ------------------------------------------------------------------------------
 {% endcomment %}
+
+<section 
+  class="sec revband section-reviews" 
+  id="reviews-{{ section.id }}" 
+  data-scene="1"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="wrap">
+    {%- comment -%} AGGREGATE HEADER STATS {%- endcomment -%}
+    <div class="revhead rv">
+      {%- if section.settings.kicker != blank -%}
+        <span class="kicker">{{ section.settings.kicker | escape }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.aggregate_rating != blank -%}
+        <span class="agg">
+          <span class="st" aria-hidden="true">★★★★★</span>
+          {{ section.settings.aggregate_rating }}
+        </span>
+      {%- endif -%}
+
+      {%- if section.settings.aggregate_social_proof != blank -%}
+        <span class="agg">
+          {{ section.settings.aggregate_social_proof }}
+        </span>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} MARQUEE SCROLLING TRACK {%- endcomment -%}
+  <div 
+    class="revrail rv" 
+    aria-label="{{ section.settings.accessibility_label | default: 'Customer reviews marquee' }}"
+    tabindex="0"
+  >
+    <div class="revtrack" style="animation-duration: {{ section.settings.marquee_speed | default: 30 }}s;">
+      {%- if section.blocks.size > 0 -%}
+        {%- comment -%} Loop blocks twice for continuous seamless infinite scroll loop {%- endcomment -%}
+        {%- for iteration in (1..2) -%}
+          {%- for block in section.blocks -%}
+            {%- assign star_count = block.settings.rating_stars | default: 5 -%}
+            
+            <article class="glass-2 rcard" {{ block.shopify_attributes }}>
+              <div class="st" aria-label="{{ star_count }} out of 5 stars">
+                {%- for i in (1..star_count) -%}★{%- endfor -%}
+              </div>
+
+              {%- if block.settings.headline != blank -%}
+                <h5>{{ block.settings.headline | escape }}</h5>
+              {%- endif -%}
+
+              {%- if block.settings.body_text != blank -%}
+                <p>{{ block.settings.body_text | escape }}</p>
+              {%- endif -%}
+
+              <div class="who">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m5 13 4 4L19 7"/>
+                </svg>
+                <b>{{ block.settings.author | escape }}</b>
+                {%- if block.settings.product_purchased != blank -%}
+                  <span>· {{ block.settings.product_purchased | escape }}</span>
+                {%- endif -%}
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Onboarding Fallback Cards {%- endcomment -%}
+        {%- for i in (1..6) -%}
+          <article class="glass-2 rcard">
+            <div class="st">★★★★★</div>
+            <h5>Works like a charm</h5>
+            <p>Finally an eco option that cleans as well as chemical detergent, and smells better.</p>
+            <div class="who">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+              <b>Verified Buyer</b>
+              <span>· Laundry detergent</span>
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{%- comment -%} ACCESSIBILITY STYLES (Pause animation on hover or focus-within) {%- endcomment -%}
+<style>
+  #reviews-{{ section.id }} .revrail:hover .revtrack,
+  #reviews-{{ section.id }} .revrail:focus-within .revtrack,
+  #reviews-{{ section.id }} .revrail:focus .revtrack {
+    animation-play-state: paused !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #reviews-{{ section.id }} .revtrack {
+      animation: none !important;
+      overflow-x: auto;
+    }
+  }
+</style>
 
 {% schema %}
 {
@@ -11,21 +116,37 @@
   "settings": [
     {
       "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility Rail Label",
+      "default": "Customer reviews marquee"
+    },
+    {
+      "type": "text",
       "id": "kicker",
       "label": "Kicker / Eyebrow",
       "default": "That's what they said"
     },
     {
-      "type": "text",
+      "type": "html",
       "id": "aggregate_rating",
-      "label": "Aggregate Rating Text",
-      "default": "4.8 from 8,000+ reviews"
+      "label": "Aggregate Rating HTML",
+      "default": "<b>4.8</b> from 8,000+ reviews"
     },
     {
-      "type": "text",
+      "type": "html",
       "id": "aggregate_social_proof",
-      "label": "Social Proof Text",
-      "default": "Loved by 12 lakh+ homes"
+      "label": "Social Proof HTML",
+      "default": "Loved by <b>12 lakh+</b> homes"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Marquee Animation Speed (Seconds)",
+      "default": 30
     },
     {
       "type": "header",
@@ -64,12 +185,12 @@
           "max": 5,
           "step": 1,
           "default": 5,
-          "label": "Star Rating"
+          "label": "Star Rating (1-5)"
         },
         {
           "type": "text",
           "id": "headline",
-          "label": "Review Headline",
+          "label": "Review Title / Headline",
           "default": "Works like a charm"
         },
         {
@@ -81,13 +202,13 @@
         {
           "type": "text",
           "id": "author",
-          "label": "Author Name",
+          "label": "Customer Name",
           "default": "Anita"
         },
         {
           "type": "text",
           "id": "product_purchased",
-          "label": "Product Purchased / Tag",
+          "label": "Purchased Product Tag",
           "default": "Laundry detergent"
         }
       ]
@@ -100,6 +221,7 @@
         {
           "type": "review",
           "settings": {
+            "rating_stars": 5,
             "headline": "Works like a charm",
             "body_text": "Finally an eco option that cleans as well as the chemical detergent I used for years, and it smells better.",
             "author": "Anita",
@@ -109,6 +231,7 @@
         {
           "type": "review",
           "settings": {
+            "rating_stars": 5,
             "headline": "Best dishwash ever",
             "body_text": "Our old dishwash left my help with dry, cracked skin. That stopped completely after we switched.",
             "author": "Priya",
@@ -118,10 +241,31 @@
         {
           "type": "review",
           "settings": {
+            "rating_stars": 5,
             "headline": "Great product, great packaging",
             "body_text": "Very soft on hands with a lovely fragrance, and it feels good to be using far less plastic.",
             "author": "Sunita",
             "product_purchased": "Liquid handwash"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating_stars": 5,
+            "headline": "Dog friendly",
+            "body_text": "We switched because chemical floor cleaners were setting off my dog's allergies. No reactions since.",
+            "author": "Rohit S.",
+            "product_purchased": "Floor cleaner"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating_stars": 5,
+            "headline": "Sparkling taps again",
+            "body_text": "Hard water had ruined our bathroom fittings. Two sprays and the scale wipes straight off, no scrubbing.",
+            "author": "Verified buyer",
+            "product_purchased": "Tap cleaner"
           }
         }
       ]
