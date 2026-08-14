@@ -1,0 +1,226 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "heading": "Clean<br>That<br><span class=\"lime\">Lasts</span>",
+        "subheading": "<p>Homecare that works on the toughest grime, made from plants. Kind to your home, your family and the world outside it.</p>",
+        "button_primary_label": "Shop now",
+        "button_primary_link": "#shop",
+        "button_ghost_label": "How it works",
+        "button_ghost_link": "#how",
+        "padding_top": 150,
+        "padding_bottom": 35
+      },
+      "blocks": {
+        "badge_1": {
+          "type": "promise_badge",
+          "settings": { "title": "Plant powered" }
+        },
+        "badge_2": {
+          "type": "promise_badge",
+          "settings": { "title": "Safe for kids & pets" }
+        },
+        "badge_3": {
+          "type": "promise_badge",
+          "settings": { "title": "Zero harsh chemicals" }
+        },
+        "slide_1": {
+          "type": "product_slide",
+          "settings": { "label": "Single bottle" }
+        },
+        "slide_2": {
+          "type": "product_slide",
+          "settings": { "label": "Any 2 products" }
+        },
+        "slide_3": {
+          "type": "product_slide",
+          "settings": { "label": "Any 3 products" }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "badge_2",
+        "badge_3",
+        "slide_1",
+        "slide_2",
+        "slide_3"
+      ]
+    },
+    "reviews_marquee": {
+      "type": "reviews-marquee",
+      "settings": {
+        "kicker": "That's what they said",
+        "aggregate_rating": "<b>4.8</b> from 8,000+ reviews",
+        "aggregate_social_proof": "Loved by <b>12 lakh+</b> homes",
+        "marquee_speed": 30
+      },
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating_stars": 5,
+            "headline": "Works like a charm",
+            "body_text": "Finally an eco option that cleans as well as the chemical detergent I used for years, and it smells better.",
+            "author": "Anita",
+            "product_purchased": "Laundry detergent"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating_stars": 5,
+            "headline": "Best dishwash ever",
+            "body_text": "Our old dishwash left my help with dry, cracked skin. That stopped completely after we switched.",
+            "author": "Priya",
+            "product_purchased": "Dishwash gel"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating_stars": 5,
+            "headline": "Great product, great packaging",
+            "body_text": "Very soft on hands with a lovely fragrance, and it feels good to be using far less plastic.",
+            "author": "Sunita",
+            "product_purchased": "Liquid handwash"
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "rating_stars": 5,
+            "headline": "Dog friendly",
+            "body_text": "We switched because chemical floor cleaners were setting off my dog's allergies. No reactions since.",
+            "author": "Rohit S.",
+            "product_purchased": "Floor cleaner"
+          }
+        },
+        "review_5": {
+          "type": "review",
+          "settings": {
+            "rating_stars": 5,
+            "headline": "Sparkling taps again",
+            "body_text": "Hard water had ruined our bathroom fittings. Two sprays and the scale wipes straight off, no scrubbing.",
+            "author": "Verified buyer",
+            "product_purchased": "Tap cleaner"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3",
+        "review_4",
+        "review_5"
+      ]
+    },
+    "combos_carousel": {
+      "type": "combos-carousel",
+      "settings": {
+        "kicker": "Pre-built to save you money",
+        "heading": "Best selling combos",
+        "subheading": "Swipe through the boxes people order most. Each one is already priced below buying the same products on their own."
+      },
+      "blocks": {
+        "combo_1": {
+          "type": "combo_card",
+          "settings": {
+            "title_override": "Kitchen essentials",
+            "flag_tag": "Most popular",
+            "is_featured": false,
+            "product_count_text": "3 products",
+            "description": "Includes: Foaming Kitchen Cleaner, Dishwash Gel & Tap Cleaner.",
+            "item1_label": "Cuts grease instantly",
+            "item2_label": "Squeaky clean dishes",
+            "item3_label": "Melts hard water stains"
+          }
+        },
+        "combo_2": {
+          "type": "combo_card",
+          "settings": {
+            "title_override": "Complete home bundle",
+            "flag_tag": "Best value",
+            "is_featured": true,
+            "product_count_text": "5 products",
+            "description": "Includes: Kitchen Cleaner, Laundry Detergent, Floor Cleaner, Toilet Cleaner & Handwash.",
+            "item1_label": "Cuts grease instantly",
+            "item2_label": "Kills 99.9% germs",
+            "item3_label": "Gentle hydration"
+          }
+        }
+      },
+      "block_order": [
+        "combo_1",
+        "combo_2"
+      ]
+    },
+    "bundles_tier": {
+      "type": "bundles-tier",
+      "settings": {
+        "kicker": "Build your bundle",
+        "heading": "One box. Every room.",
+        "subheading": "Mix and match across kitchen, laundry, home and skin. One flat price, no code needed, free shipping either way."
+      },
+      "blocks": {
+        "tier_1": {
+          "type": "tier_card",
+          "settings": {
+            "tag_label": "Starter",
+            "is_featured": false,
+            "product_quantity": 2,
+            "price_override": "₹349",
+            "compare_price_override": "₹598",
+            "per_product_note": "Flat ₹174 per product",
+            "features_list": "Pick any two products\nFree shipping across India"
+          }
+        },
+        "tier_2": {
+          "type": "tier_card",
+          "settings": {
+            "tag_label": "Most popular",
+            "is_featured": true,
+            "product_quantity": 3,
+            "price_override": "₹499",
+            "compare_price_override": "₹897",
+            "per_product_note": "Flat ₹166 per product",
+            "features_list": "Pick any three products\nCovers kitchen and laundry\nFree shipping across India"
+          }
+        },
+        "tier_3": {
+          "type": "tier_card",
+          "settings": {
+            "tag_label": "Whole home",
+            "is_featured": false,
+            "product_quantity": 5,
+            "price_override": "₹799",
+            "compare_price_override": "₹1495",
+            "per_product_note": "Flat ₹160 per product",
+            "features_list": "Pick any five products\nEvery room in one order\nFree shipping across India"
+          }
+        }
+      },
+      "block_order": [
+        "tier_1",
+        "tier_2",
+        "tier_3"
+      ]
+    },
+    "shop_grid": {
+      "type": "shop-grid",
+      "settings": {
+        "kicker": "Bestsellers",
+        "heading": "Loved by 30,000 homes",
+        "products_to_show": 8,
+        "columns_desktop": 4
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "reviews_marquee",
+    "combos_carousel",
+    "bundles_tier",
+    "shop_grid"
+  ]
+}
