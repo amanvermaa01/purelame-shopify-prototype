@@ -1,0 +1,229 @@
+/* ==========================================================================
+   PURELANE GLASSMORPHISM DESIGN SYSTEM & CORE UTILITIES
+   Extracted from purelane-homepage.html for standard Dawn Theme integration.
+   ========================================================================== */
+
+:root {
+  --ink: #17102b;
+  --deep: #241a3d;
+  --brand: #4b3a8f;
+  --brand-lt: #6b55b8;
+  --paper: #ece6f7;
+  --paper-2: rgba(236, 230, 247, 0.74);
+  --paper-3: rgba(236, 230, 247, 0.52);
+  --accent: #f0a03c;
+  --accent-2: #c9761d;
+  --surface: #faf7fd;
+  --g-bg: linear-gradient(158deg, rgba(236, 230, 247, 0.15), rgba(75, 58, 143, 0.20) 58%, rgba(23, 16, 43, 0.28));
+  --g-line: rgba(236, 230, 247, 0.22);
+  --g-shadow: 0 26px 74px rgba(18, 12, 34, 0.44);
+  --g-inset: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  --r: 26px;
+  --r-sm: 16px;
+  --maxw: 1180px;
+  --sec-y: 34px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+/* Global Typography & Body Background */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+main.content-for-layout {
+  position: relative;
+  z-index: 2;
+}
+
+/* Glassmorphism Components */
+.glass {
+  background: var(--g-bg) !important;
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--g-line) !important;
+  border-radius: var(--r) !important;
+  box-shadow: var(--g-shadow), var(--g-inset) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.16), transparent 30%, transparent 72%, rgba(240, 160, 60, 0.07));
+}
+
+.glass-2 {
+  background: linear-gradient(158deg, rgba(236, 230, 247, 0.10), rgba(0, 48, 46, 0.22)) !important;
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  border: 1px solid rgba(236, 230, 247, 0.16) !important;
+  border-radius: var(--r) !important;
+  box-shadow: 0 18px 48px rgba(18, 12, 34, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Display Typography Scales */
+.d1, .d2, .d3, .d4 {
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: -.018em;
+  font-weight: 800;
+  line-height: .87;
+  color: var(--surface) !important;
+}
+
+.d1 { font-size: clamp(48px, 8.6vw, 112px); }
+.d2 { font-size: clamp(30px, 4.6vw, 54px); line-height: .94; }
+.d3 { font-size: clamp(21px, 2.5vw, 30px); line-height: 1.04; font-weight: 700; letter-spacing: -.01em; }
+.d4 { font-size: clamp(16px, 1.6vw, 19px); line-height: 1.14; font-weight: 700; letter-spacing: .005em; }
+
+.lime { color: var(--accent) !important; }
+.lede { font-size: clamp(15px, 1.35vw, 17.5px); color: var(--paper-2); max-width: 44ch; }
+.body-s { font-size: 14.5px; color: var(--paper-2); line-height: 1.66; }
+.kicker { font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--paper-3); }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 18px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  transition: .35s var(--ease);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn svg { width: 15px; height: 15px; flex: 0 0 auto; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-2), #5d8d1c) !important;
+  color: #08211a !important;
+  box-shadow: 0 12px 30px rgba(201, 118, 29, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(201, 118, 29, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-ghost {
+  background: rgba(236, 230, 247, 0.10) !important;
+  border: 1px solid rgba(236, 230, 247, 0.30) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--surface) !important;
+}
+
+.btn-ghost:hover {
+  background: rgba(236, 230, 247, 0.18) !important;
+  transform: translateY(-2px);
+}
+
+.btn-sm { height: 38px; padding: 0 18px; font-size: 11px; letter-spacing: .14em; }
+
+/* Rule / Decorative Divider */
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin: 0 0 20px;
+  max-width: 270px;
+}
+
+.rule i {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, rgba(236, 230, 247, 0.44), transparent);
+}
+
+.rule svg {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.panel-head {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.panel-head .d2 { margin-bottom: 12px; }
+
+.panel-head .rule {
+  margin: 0 auto;
+  justify-content: center;
+  max-width: 240px;
+}
+
+.panel-head .rule i:first-child {
+  background: linear-gradient(90deg, transparent, rgba(236, 230, 247, 0.44));
+}
+
+/* Reveal Animation */
+.rv {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: opacity .95s var(--ease), transform .95s var(--ease), filter .95s var(--ease);
+}
+
+/* Ambient Water Cinematics Background */
+.scenes {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--brand);
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+}
+
+.s1 { background: linear-gradient(178deg, #1ea38d 0%, #0b8578 22%, #017069 48%, #4b3a8f 74%, #01524e 100%); }
+
+.vig {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(126% 86% at 50% 28%, transparent 38%, rgba(1, 50, 46, 0.20) 78%, rgba(1, 34, 32, 0.44) 100%),
+              linear-gradient(180deg, rgba(1, 38, 36, 0.30) 0%, transparent 18%, transparent 66%, rgba(1, 32, 30, 0.40) 100%);
+}
+
+/* Accessibility Focus States */
+:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 3px !important;
+  border-radius: 6px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
